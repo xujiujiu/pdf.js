@@ -74,3 +74,20 @@ import { isNodeJS } from "./is_node.js";
   }
   require("core-js/web/structured-clone.js");
 })();
+
+// Support: Firefox<77, Chrome<85, Safari<14.0, Node.js<17.0.0
+(function checkReplaceAll() {
+  if (String.replaceAll) {
+    return;
+  }
+  require("core-js/es/string/replace-all");
+})();
+// Support: Firefox<76, Chrome<71, Safari<13.0, Node.js<17.0.0
+(function checkPromiseAllSettled() {
+  if (Promise.allSettled) {
+    // The current image decoders are synchronous, hence `structuredClone`
+    // shouldn't need to be polyfilled for the IMAGE_DECODERS build target.
+    return;
+  }
+  require("core-js/proposals/promise-all-settled");
+})();

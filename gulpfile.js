@@ -79,9 +79,9 @@ const ENV_TARGETS = [
   "last 2 versions",
   "Chrome >= 88",
   "Firefox ESR",
-  "Safari >= 14.1",
+  "Safari >= 10.3",
   "Node >= 16",
-  "> 1%",
+  "> 0.2%",
   "not IE > 0",
   "not dead",
 ];
@@ -92,6 +92,10 @@ const AUTOPREFIXER_CONFIG = {
 };
 // Default Babel targets used for generic, components, minified-pre
 const BABEL_TARGETS = ENV_TARGETS.join(", ");
+const babelPlugins = [
+  "@babel/plugin-transform-runtime",
+  "@babel/plugin-transform-modules-commonjs",
+];
 
 const DEFINES = Object.freeze({
   SKIP_BABEL: true,
@@ -214,8 +218,6 @@ function createWebpackConfig(
     babelExcludes.push("src[\\\\\\/]core[\\\\\\/](glyphlist|unicode)");
   }
   const babelExcludeRegExp = new RegExp(`(${babelExcludes.join("|")})`);
-
-  const babelPlugins = ["@babel/plugin-transform-modules-commonjs"];
 
   const plugins = [];
   if (!disableLicenseHeader) {
@@ -1540,7 +1542,7 @@ function buildLibHelper(bundleDefines, inputStream, outputDir) {
       sourceType: "module",
       presets: skipBabel ? undefined : ["@babel/preset-env"],
       plugins: [
-        "@babel/plugin-transform-modules-commonjs",
+        ...babelPlugins,
         babelPluginReplaceNonWebpackImports,
       ],
       targets: BABEL_TARGETS,
